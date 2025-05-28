@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  mock-service:
+    build:
+      context: ./mock_service
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    networks:
+      - cloud-scanner-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    environment:
+      - BASE_URL=http://mock-service:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - cloud-scanner-network
+    depends_on:
+      mock-service:
+        condition: service_healthy
+
+networks:
+  cloud-scanner-network:
+    driver: bridge 

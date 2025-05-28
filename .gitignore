@@ -1,0 +1,29 @@
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment variables
+.env
+
+# Test cache and reports
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+
+# Backup files
+*.backup
+
+# Docker logs
+*.log
+
+# Virtual environment (if created locally)
+venv/
+env/ 

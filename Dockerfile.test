@@ -1,0 +1,22 @@
+FROM python:3.9-slim
+
+WORKDIR /app
+
+# Install curl for healthcheck
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements and install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy source code and tests
+COPY scanner.py .
+COPY tests/ tests/
+COPY wait-for-service.sh .
+
+# Make wait script executable
+RUN chmod +x wait-for-service.sh
+
+# Use wait script before running tests
+ENTRYPOINT ["./wait-for-service.sh"]
+CMD ["pytest", "-v", "--cov=scanner", "--cov-report=term-missing", "tests/"] 
